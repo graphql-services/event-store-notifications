@@ -6,13 +6,13 @@ participant NotificationStore
 actor User
 
 EventStore -> Handler : Capture change event
-Handler -> NotificationStore : Store notifications to relevant principals
+Handler -> NotificationStore : Store notifications to\n relevant principals
 Handler --> EventStoreAggregator : Fetch aggregated data
 EventStoreAggregator --> Handler : Return aggregated data
 NotificationStore --> User : Notify user (optional)
-User -> NotificationStore : Get notifications (filtered by channel)
+User -> NotificationStore : Get notifications\n(filtered by channel)
 NotificationStore -> User : Return notifications
-User -> NotificationStore : Confirm seen notification (optionally provide channel)
+User -> NotificationStore : Confirm seen notification\n(optionally provide channel)
 
 
 @enduml
