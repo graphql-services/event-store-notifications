@@ -1,7 +1,7 @@
 @startuml diagram
 actor User
 participant EventStore
-participant "Handler\n(custom implmentation)" as Handler
+participant "Handler\n(custom implementation)" as Handler
 participant NotificationStore
 
 EventStore -> Handler : Capture change event
