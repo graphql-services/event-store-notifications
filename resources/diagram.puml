@@ -1,7 +1,15 @@
-@startuml
-Alice -> Bob: Authentication Request
-Bob --> Alice: Authentication Response
+@startuml diagram
+actor User
+participant EventStore
+participant "Handler\n(custom implmentation)" as Handler
+participant NotificationStore
 
-Alice -> Bob: Another authentication Request
-Alice <-- Bob: Another authentication Response
+EventStore -> Handler : Capture change event
+Handler -> NotificationStore : Store notifications to relevant principals
+NotificationStore --> User : Notify user (optional)
+User -> NotificationStore : Get notifications (filtered by channel)
+NotificationStore -> User : Return notifications
+User -> NotificationStore : Confirm seen notification (optionally provide channel)
+
+
 @enduml
