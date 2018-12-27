@@ -1,11 +1,14 @@
 @startuml diagram
-actor User
 participant EventStore
+participant EventStoreAggregator
 participant "Handler\n(custom implementation)" as Handler
 participant NotificationStore
+actor User
 
 EventStore -> Handler : Capture change event
 Handler -> NotificationStore : Store notifications to relevant principals
+Handler --> EventStoreAggregator : Fetch aggregated data
+EventStoreAggregator --> Handler : Return aggregated data
 NotificationStore --> User : Notify user (optional)
 User -> NotificationStore : Get notifications (filtered by channel)
 NotificationStore -> User : Return notifications
