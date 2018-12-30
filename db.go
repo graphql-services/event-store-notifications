@@ -26,9 +26,7 @@ func NewDBWithString(urlString string) *DB {
 		panic(err)
 	}
 
-	// if u.Scheme == "sqlite3" {
 	urlString = strings.Replace(urlString, u.Scheme+"://", "", 1)
-	// }
 
 	db, err := gorm.Open(u.Scheme, urlString)
 	if err != nil {
