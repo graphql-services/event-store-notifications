@@ -47,15 +47,15 @@ func ServerCommand() cli.Command {
 			},
 		},
 		Action: func(c *cli.Context) error {
-			databaseUrl := c.String("db")
+			databaseURL := c.String("db")
 
-			if databaseUrl == "" {
+			if databaseURL == "" {
 				return cli.NewExitError(fmt.Errorf("database url must be provided"), 1)
 			}
 
 			port := c.String("port")
 
-			if err := startServer(databaseUrl, port); err != nil {
+			if err := startServer(databaseURL, port); err != nil {
 				return cli.NewExitError(err, 1)
 			}
 
