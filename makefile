@@ -10,9 +10,9 @@ lint:
 	docker run -it --rm -v "$(PWD)/Dockerfile:/Dockerfile:ro" redcoolbeans/dockerlint
 
 build:
-	go get ./...
+	# go get ./...
 	# gox -osarch="linux/amd64" -output="bin/devops-alpine"
-	CGO_ENABLED=0 GOOS=linux go build -a -installsuffix cgo -o bin/binary .
+	# CGO_ENABLED=0 GOOS=linux go build -a -installsuffix cgo -o bin/binary .
 	docker build -t $(GIT_TAG) .
 	
 tag:
@@ -34,3 +34,6 @@ build-local:
 deploy-local:
 	make build-local
 	mv $(IMAGE_NAME) /usr/local/bin/
+
+run:
+	DATABASE_URL=sqlite3://test.db go run *.go server -p 8000

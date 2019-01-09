@@ -2,6 +2,7 @@ package main
 
 import (
 	"fmt"
+	"io/ioutil"
 	"log"
 	"net/http"
 
@@ -10,26 +11,7 @@ import (
 	"github.com/urfave/cli"
 )
 
-type query struct {
-	db *DB
-}
-
-func (q *query) Notifications() []Notification {
-	var notifications []Notification
-	q.db.db.Find(&notifications)
-	return notifications
-}
-func (q *query) Notification(params struct{ ID graphql.ID }) *Notification {
-	var n Notification
-	q.db.db.First(&n, params.ID)
-	return &n
-}
-func (q *query) CreateNotification(params struct{ Input NotificationInput }) Notification {
-	n := NewNotification(params.Input)
-	q.db.db.Create(&n)
-	return n
-}
-
+// ServerCommand ...
 func ServerCommand() cli.Command {
 	return cli.Command{
 		Name: "server",
@@ -38,6 +20,7 @@ func ServerCommand() cli.Command {
 				Name:   "db",
 				Usage:  "Connection url to database (GORM)",
 				EnvVar: "DATABASE_URL",
+				Value:  "sqlite3://test.db",
 			},
 			cli.StringFlag{
 				Name:   "p,port",
@@ -63,30 +46,13 @@ func ServerCommand() cli.Command {
 		},
 	}
 }
+
 func startServer(urlString, port string) error {
-	s := `
-		scalar Time
-		schema {
-			query: Query
-			mutation: Mutation
-		}
-		type EventStoreNotification {
-			id: ID!
-			message: String
-			date: Time
-		}
-		type Query {
-			notifications: [EventStoreNotification!]!
-			notification(id: ID!): EventStoreNotification
-		}
-		input EventStoreNotificationInput {
-			message: String
-			date: Time
-		}
-		type Mutation {
-			createNotification(input: EventStoreNotificationInput!): EventStoreNotification!
-		}
-	`
+	dat, err := ioutil.ReadFile("schema.graphql")
+	if err != nil {
+		return err
+	}
+	s := string(dat)
 
 	db := NewDBWithString(urlString)
 	defer db.Close()

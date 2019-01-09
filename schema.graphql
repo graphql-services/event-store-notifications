@@ -1,0 +1,48 @@
+scalar Time
+
+schema {
+  query: Query
+  mutation: Mutation
+}
+
+type EventStoreNotification {
+  id: ID!
+  message: String
+  seen: Boolean!
+  principal: ID!
+  channel: ID!
+  reference: ID!
+  date: Time
+}
+
+type Query {
+  notifications(
+    principal: ID
+    channel: ID
+    reference: ID
+    seen: Boolean
+    limit: Int
+  ): [EventStoreNotification!]!
+  notification(id: ID!): EventStoreNotification
+}
+
+input EventStoreNotificationInput {
+  message: String
+  principal: ID!
+  channel: ID!
+  reference: ID!
+  date: Time
+}
+
+type Mutation {
+  createNotification(
+    input: EventStoreNotificationInput!
+  ): EventStoreNotification!
+  seenNotification(id: ID!): EventStoreNotification
+  seenNotifications(
+    principal: ID!
+    channel: ID
+    reference: ID
+    date: Time!
+  ): Boolean!
+}
