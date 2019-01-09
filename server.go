@@ -60,6 +60,9 @@ func startServer(urlString, port string) error {
 
 	schema := graphql.MustParseSchema(s, &query{db})
 	http.Handle("/graphql", &relay.Handler{Schema: schema})
+	http.HandleFunc("/healthcheck", func(w http.ResponseWriter, r *http.Request) {
+		fmt.Fprintf(w, "OK")
+	})
 
 	fmt.Println("starting on port: " + port)
 	log.Fatal(http.ListenAndServe(":"+port, nil))
