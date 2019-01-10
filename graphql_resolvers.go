@@ -31,7 +31,6 @@ func (q *query) Notifications(params notificationsParams) ([]Notification, error
 		query = query.Where(&Notification{IReference: *params.Reference})
 	}
 	if params.Seen != nil {
-		fmt.Println("seen!!")
 		query = query.Where(&Notification{ISeen: params.Seen})
 	}
 	if params.Limit != nil {
