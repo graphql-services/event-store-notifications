@@ -1,8 +1,6 @@
 package main
 
 import (
-	"fmt"
-
 	graphql "github.com/graph-gophers/graphql-go"
 	uuid "github.com/satori/go.uuid"
 )
@@ -12,13 +10,14 @@ func NewNotification(i notificationInput) Notification {
 	id := uuid.Must(uuid.NewV4())
 	seen := false
 	return Notification{
-		IID:        id,
-		IMessage:   fmt.Sprint(*i.Message),
-		IPrincipal: i.Principal,
-		IChannel:   i.Channel,
-		IReference: i.Reference,
-		IDate:      i.Date.Time,
-		ISeen:      &seen,
+		IID:          id,
+		IMessage:     i.Message,
+		IPrincipal:   i.Principal,
+		IChannel:     i.Channel,
+		IReference:   i.Reference,
+		IReferenceID: i.ReferenceID,
+		IDate:        i.Date.Time,
+		ISeen:        &seen,
 	}
 }
 
@@ -28,23 +27,28 @@ func (n Notification) ID() graphql.ID {
 }
 
 // Message ...
-func (n Notification) Message() *string {
-	return &n.IMessage
+func (n Notification) Message() string {
+	return n.IMessage
 }
 
 // Principal ...
-func (n Notification) Principal() graphql.ID {
-	return graphql.ID(n.IPrincipal)
+func (n Notification) Principal() *string {
+	return n.IPrincipal
 }
 
 // Channel ...
-func (n Notification) Channel() graphql.ID {
-	return graphql.ID(n.IChannel)
+func (n Notification) Channel() *string {
+	return n.IChannel
 }
 
 // Reference ...
-func (n Notification) Reference() graphql.ID {
-	return graphql.ID(n.IReference)
+func (n Notification) Reference() *string {
+	return n.IReference
+}
+
+// ReferenceID ...
+func (n Notification) ReferenceID() *string {
+	return n.IReferenceID
 }
 
 // Date ...

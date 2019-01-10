@@ -12,9 +12,9 @@ type query struct {
 }
 
 type notificationsParams struct {
-	Principal, Channel, Reference *string
-	Seen                          *bool
-	Limit                         *int32
+	Principal, Channel, Reference, ReferenceID *string
+	Seen                                       *bool
+	Limit                                      *int32
 }
 
 // Notifications ...
@@ -22,13 +22,16 @@ func (q *query) Notifications(params notificationsParams) ([]Notification, error
 	var notifications []Notification
 	query := q.db.db
 	if params.Principal != nil {
-		query = query.Where(&Notification{IPrincipal: *params.Principal})
+		query = query.Where(&Notification{IPrincipal: params.Principal})
 	}
 	if params.Channel != nil {
-		query = query.Where(&Notification{IChannel: *params.Channel})
+		query = query.Where(&Notification{IChannel: params.Channel})
 	}
 	if params.Reference != nil {
-		query = query.Where(&Notification{IReference: *params.Reference})
+		query = query.Where(&Notification{IReference: params.Reference})
+	}
+	if params.ReferenceID != nil {
+		query = query.Where(&Notification{IReferenceID: params.ReferenceID})
 	}
 	if params.Seen != nil {
 		query = query.Where(&Notification{ISeen: params.Seen})
@@ -51,11 +54,12 @@ func (q *query) Notification(params struct{ ID graphql.ID }) *Notification {
 }
 
 type notificationInput struct {
-	Message   *string
-	Principal string
-	Channel   string
-	Reference string
-	Date      graphql.Time
+	Message     string
+	Principal   *string
+	Channel     *string
+	Reference   *string
+	ReferenceID *string
+	Date        graphql.Time
 }
 
 // CreateNotification ...
@@ -80,10 +84,11 @@ func (q *query) SeenNotification(params struct{ ID graphql.ID }) *Notification {
 
 // SeenNotificationsParams ...
 type SeenNotificationsParams struct {
-	Principal graphql.ID
-	Channel   *graphql.ID
-	Reference *graphql.ID
-	Date      time.Time
+	Principal   string
+	Channel     *string
+	Reference   *string
+	ReferenceID *string
+	Date        time.Time
 }
 
 // SeenNotifications ...

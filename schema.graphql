@@ -7,19 +7,21 @@ schema {
 
 type EventStoreNotification {
   id: ID!
-  message: String
+  message: String!
   seen: Boolean!
-  principal: ID!
-  channel: ID!
-  reference: ID!
+  principal: String
+  channel: String
+  reference: String
+  referenceID: String
   date: Time!
 }
 
 type Query {
   notifications(
-    principal: ID
-    channel: ID
-    reference: ID
+    principal: String
+    channel: String
+    reference: String
+    referenceID: String
     seen: Boolean
     limit: Int
   ): [EventStoreNotification!]!
@@ -27,10 +29,11 @@ type Query {
 }
 
 input EventStoreNotificationInput {
-  message: String
-  principal: ID!
-  channel: ID!
-  reference: ID!
+  message: String!
+  principal: String
+  channel: String
+  reference: String
+  referenceID: String
   date: Time!
 }
 
@@ -40,9 +43,10 @@ type Mutation {
   ): EventStoreNotification!
   seenNotification(id: ID!): EventStoreNotification
   seenNotifications(
-    principal: ID!
-    channel: ID
-    reference: ID
+    principal: String!
+    channel: String!
+    reference: String
+    referenceID: String
     date: Time!
   ): Boolean!
 }
