@@ -12,7 +12,7 @@ type EventStoreNotification {
   principal: ID!
   channel: ID!
   reference: ID!
-  date: Time
+  date: Time!
 }
 
 type Query {

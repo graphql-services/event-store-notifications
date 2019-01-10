@@ -17,7 +17,7 @@ func NewNotification(i notificationInput) Notification {
 		IPrincipal: i.Principal,
 		IChannel:   i.Channel,
 		IReference: i.Reference,
-		IDate:      &i.Date.Time,
+		IDate:      i.Date.Time,
 		ISeen:      &seen,
 	}
 }
@@ -48,12 +48,8 @@ func (n Notification) Reference() graphql.ID {
 }
 
 // Date ...
-func (n Notification) Date() *graphql.Time {
-	var t graphql.Time
-	if n.IDate != nil {
-		t = graphql.Time{Time: *n.IDate}
-	}
-	return &t
+func (n Notification) Date() graphql.Time {
+	return graphql.Time{Time: n.IDate}
 }
 
 // Seen ...

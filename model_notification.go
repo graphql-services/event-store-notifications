@@ -14,7 +14,7 @@ type Notification struct {
 	UpdatedAt  time.Time
 	DeletedAt  *time.Time `sql:"index"`
 	IMessage   string
-	IDate      *time.Time
+	IDate      time.Time
 	IPrincipal string
 	IChannel   string
 	IReference string

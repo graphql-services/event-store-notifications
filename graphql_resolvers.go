@@ -56,7 +56,7 @@ type notificationInput struct {
 	Principal string
 	Channel   string
 	Reference string
-	Date      *graphql.Time
+	Date      graphql.Time
 }
 
 // CreateNotification ...
