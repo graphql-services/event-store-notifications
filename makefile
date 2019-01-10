@@ -4,7 +4,7 @@ QNAME=$(OWNER)/$(IMAGE_NAME)
 
 GIT_TAG=$(QNAME):$(TRAVIS_COMMIT)
 BUILD_TAG=$(QNAME):$(TRAVIS_BUILD_NUMBER).$(TRAVIS_COMMIT)
-LATEST_TAG=$(QNAME):latest
+TAG=$(QNAME):`echo $(TRAVIS_BRANCH) | sed 's/master/latest/;s/develop/unstable/'`
 
 lint:
 	docker run -it --rm -v "$(PWD)/Dockerfile:/Dockerfile:ro" redcoolbeans/dockerlint
@@ -17,14 +17,14 @@ build:
 	
 tag:
 	docker tag $(GIT_TAG) $(BUILD_TAG)
-	docker tag $(GIT_TAG) $(LATEST_TAG)
+	docker tag $(GIT_TAG) $(TAG)
 	
 login:
 	@docker login -u "$(DOCKER_USER)" -p "$(DOCKER_PASS)"
 push: login
 	# docker push $(GIT_TAG)
 	docker push $(BUILD_TAG)
-	docker push $(LATEST_TAG)
+	docker push $(TAG)
 	
 
 build-local:
