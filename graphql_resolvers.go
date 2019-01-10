@@ -2,7 +2,6 @@ package main
 
 import (
 	"fmt"
-	"time"
 
 	graphql "github.com/graph-gophers/graphql-go"
 )
@@ -76,8 +75,6 @@ func (q *query) SeenNotification(params struct{ ID graphql.ID }) *Notification {
 	if q.db.db.Where("i_id =?", params.ID).First(&n).RecordNotFound() {
 		return nil
 	}
-	// seen := true
-	// n.ISeen = &seen
 	q.db.db.Model(&n).Where(&Notification{IID: n.IID}).Update("ISeen", true)
 	return &n
 }
@@ -88,13 +85,24 @@ type SeenNotificationsParams struct {
 	Channel     *string
 	Reference   *string
 	ReferenceID *string
-	Date        time.Time
+	Date        graphql.Time
 }
 
 // SeenNotifications ...
 func (q *query) SeenNotifications(params SeenNotificationsParams) bool {
-	// n := NewNotification(params.)
-	// q.db.db.Create(&n)
-	// return n
+	query := q.db.db.Model(&Notification{})
+
+	query = query.Where(&Notification{IPrincipal: &params.Principal})
+	if params.Channel != nil {
+		query = query.Where(&Notification{IChannel: params.Channel})
+	}
+	if params.Reference != nil {
+		query = query.Where(&Notification{IReference: params.Reference})
+	}
+	if params.ReferenceID != nil {
+		query = query.Where(&Notification{IReferenceID: params.ReferenceID})
+	}
+
+	query.Where("IDate <= ?", params.Date.Time).Update("ISeen", true)
 	return true
 }

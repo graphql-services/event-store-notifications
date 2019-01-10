@@ -21,3 +21,19 @@ type Notification struct {
 	IReferenceID *string
 	ISeen        *bool
 }
+
+// NewNotification ...
+func NewNotification(i notificationInput) Notification {
+	id := uuid.Must(uuid.NewV4())
+	seen := false
+	return Notification{
+		IID:          id,
+		IMessage:     i.Message,
+		IPrincipal:   i.Principal,
+		IChannel:     i.Channel,
+		IReference:   i.Reference,
+		IReferenceID: i.ReferenceID,
+		IDate:        i.Date.Time,
+		ISeen:        &seen,
+	}
+}
