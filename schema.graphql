@@ -6,13 +6,21 @@ schema {
 }
 
 type EventStoreNotification {
+  # Notification identifier
   id: ID!
+  # Custom notification message (eg. "User commented on John Doe's company")
   message: String!
+  # Indicates if user already saw/reacted this notification
   seen: Boolean!
+  # ID of receiver of this notification
   principal: String
+  # Generic information for creating multiple channels based on type of information (eg. messages, data updates, ...)
   channel: String
+  # Type of related entity (eg. user commented on company -> value would be "Company")
   reference: String
+  # ID of related entity (eg. user commented on company -> value would be Company's ID)
   referenceID: String
+  # Date when event for this notification happened
   date: Time!
 }
 
@@ -41,12 +49,15 @@ type Mutation {
   createNotification(
     input: EventStoreNotificationInput!
   ): EventStoreNotification!
+  # Mark single notification as seen
   seenNotification(id: ID!): EventStoreNotification
+  # Mark multiple notifications as seen, all notifications older than `date` will be marked as seen
   seenNotifications(
     principal: String!
     channel: String
     reference: String
     referenceID: String
+    # All notifications older than this value will be marked as seen
     date: Time!
   ): Boolean!
 }
